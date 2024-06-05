@@ -1,5 +1,3 @@
-// File origin: VS1LAB A3
-
 /**
  * This script is a template for exercise VS1lab/Aufgabe3
  * Complete all TODOs in the code documentation.
@@ -7,34 +5,14 @@
 
 /**
  * A class representing example geoTags at HKA
- * 
+ *
  * TODO: populate your InMemoryGeoTagStore with these tags
- * 
+ *
  */
-
-import InMemoryGeoTagStore from './geotag-store';
-import GeoTag from './geotag';
-
-let myInMemoryGeoTagStore = new InMemoryGeoTagStore();
-let examples = GeoTagExamples.tagList();
-
-for (let i=0; i < examples.length; i++){
-    let myGeoTag =  new GeoTag();
-    myGeoTag.setLatitude(examples[i][1]);
-    myGeoTag.setLongitude(examples[i][2]);
-    myGeoTag.setName(examples[i][0]);
-    myGeoTag.setHashtag(examples[i][3]);
-
-    myInMemoryGeoTagStore.addGeoTag(myGeoTag);
-
-}
-
 class GeoTagExamples {
     /**
      * Provides some geoTag data
      */
-
-    
     static get tagList() {
         return [
             ['Castle', 49.013790, 8.404435, '#sight'],

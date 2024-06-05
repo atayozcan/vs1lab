@@ -109,25 +109,21 @@ class MapManager {
  * It is called once the page has been fully loaded.
  */
 function updateLocation() {
-    document.getElementById("latitude_tagging").setAttribute("placeholder", location.latitude);
-    document.getElementById("longitude_tagging").setAttribute("placeholder", location.longitude);
-
-    var lat, lon;
-    lat = document.getElementById("latitude_tagging").innerHTML;
-    lon = document.getElementById("longitude_tagging").innerHTML;
-    if (lat != "" && lon != "")
-        return;
     LocationHelper.findLocation(function (location) {
         const latitude = location.latitude;
         const longitude = location.longitude;
-        document.getElementById("latitude_tagging").nodeValue = latitude;
-        document.getElementById("longitude_tagging").nodeValue = longitude;
-        document.getElementById("discovery__latitude").nodeValue = latitude;
-        document.getElementById("discovery__longitude").nodeValue = longitude;
-
+        document.getElementById("latitude_tagging").setAttribute("placeholder", latitude);
+        document.getElementById("longitude_tagging").setAttribute("placeholder", longitude);
+        document.getElementById("latitude_tagging").value = latitude;
+        document.getElementById("longitude_tagging").value = longitude;
+        document.getElementById("discovery__latitude").value = latitude;
+        document.getElementById("discovery__longitude").value = longitude;
+        const dataElement = document.querySelector('data');
+        const value = dataElement.getAttribute('value');
+        const taglist = JSON.parse(value);
         const map = new MapManager();
         map.initMap(latitude, longitude);
-        map.updateMarkers(latitude, longitude);
+        map.updateMarkers(latitude, longitude,taglist);
         document.getElementById("mapView").remove();
         document.getElementById("map").getElementsByTagName("span")[0].remove();
     });

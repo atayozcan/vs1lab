@@ -1,12 +1,3 @@
-// File origin: VS1LAB A2
-
-/* eslint-disable no-unused-vars */
-
-// This script is executed when the browser loads index.html.
-
-// "console.log" writes to the browser's console. 
-// The console window must be opened explicitly in the browser.
-// Try to find this output in the browser...
 console.log("The geoTagging script is going to start...");
 
 /**
@@ -76,10 +67,9 @@ class MapManager {
         // set up dynamic Leaflet map
         this.#map = L.map('map').setView([latitude, longitude], zoom);
         var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-        L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; ' + mapLink + ' Contributors'
-            }).addTo(this.#map);
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors'
+        }).addTo(this.#map);
         this.#markers = L.layerGroup().addTo(this.#map);
     }
 
@@ -90,15 +80,10 @@ class MapManager {
      * @param {{latitude, longitude, name}[]} tags The map tags, defaults to just the current location
      */
     updateMarkers(latitude, longitude, tags = []) {
-        // delete all markers
         this.#markers.clearLayers();
-        L.marker([latitude, longitude])
-            .bindPopup("Your Location")
-            .addTo(this.#markers);
+        L.marker([latitude, longitude]).bindPopup("Your Location").addTo(this.#markers);
         for (const tag of tags) {
-            L.marker([tag.location.latitude, tag.location.longitude])
-                .bindPopup(tag.name)
-                .addTo(this.#markers);
+            L.marker([tag.latitude, tag.longitude]).bindPopup(tag.name).addTo(this.#markers);
         }
     }
 }
@@ -118,12 +103,11 @@ function updateLocation() {
         document.getElementById("longitude_tagging").value = longitude;
         document.getElementById("discovery__latitude").value = latitude;
         document.getElementById("discovery__longitude").value = longitude;
-        const dataElement = document.querySelector('data');
-        const value = dataElement.getAttribute('value');
-        const taglist = JSON.parse(value);
+        let tagsString = document.getElementById("map").dataset.markers;
+        let tags = JSON.parse(tagsString);
         const map = new MapManager();
         map.initMap(latitude, longitude);
-        map.updateMarkers(latitude, longitude,taglist);
+        map.updateMarkers(latitude, longitude, tags);
         document.getElementById("mapView").remove();
         document.getElementById("map").getElementsByTagName("span")[0].remove();
     });

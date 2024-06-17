@@ -63,8 +63,10 @@ router.get('/', (req, res) => {
  */
 router.post("/tagging", (req, res) => {
     const data = req.body
-    const geoTag = new GeoTag(data.tag_latitude, data.tag_longitude, data.tag_name, data.tag_hashtag)
-    store.addGeoTag(geoTag)
+    if (!(data.tag_latitude === "")) {
+        const geoTag = new GeoTag(data.tag_latitude, data.tag_longitude, data.tag_name, data.tag_hashtag)
+        store.addGeoTag(geoTag)
+    }
     return res.redirect('/')
 })
 
@@ -85,9 +87,15 @@ router.post("/tagging", (req, res) => {
  */
 router.post("/discovery", (req, res) => {
     const data = req.body
-    const geoTag = new GeoTag(data.searchterm, data.tag_latitude, data.tag_longitude)
-    store.addGeoTag(geoTag)
-    return res.redirect('/')
+    const searchTerm = data.searchterm;
+    const loc = {
+        latitude: data.discovery_latitude,
+        longitude: data.discovery_longitude
+    };
+    const tags = store.getNearbyGeoTags(loc, 1000);
+    let filteredTags = store.searchNearbyGeoTags(searchTerm, loc, 1000);
+    if (filteredTags.length === 0) filteredTags = tags
+    return res.render('index', {taglist: filteredTags});
 })
 
 module.exports = router;

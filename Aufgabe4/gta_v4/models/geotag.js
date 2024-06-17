@@ -14,8 +14,10 @@ class GeoTag {
         this.longitude = longitude;
         this.name = name;
         this.hashtag = hashtag;
+        this.id = null;
     }
 
+    setId(id) {this.id=id;}
     setLatitude(latitude){this.latitude=latitude;};
     setLongitude(longitude){this.longitude=longitude;};
     setName(name){this.name=name;};

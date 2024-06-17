@@ -95,8 +95,6 @@ class MapManager {
  */
 function updateLocation() {
     LocationHelper.findLocation(function (location) {
-        if (location === undefined) return;
-
         const latitude = location.latitude;
         const longitude = location.longitude;
         document.getElementById("latitude_tagging").setAttribute("placeholder", latitude);

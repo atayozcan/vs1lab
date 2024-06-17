@@ -1,0 +1,40 @@
+GET http://localhost:3000/api/geotags
+
+###
+
+GET http://localhost:3000/api/geotags/?search=sight&radius=5
+content-type: application/json
+
+{
+  "latitude": 49.01513,
+  "longitude": 8.38973
+}
+
+###
+GET http://localhost:3000/api/geotags/2
+
+###
+
+POST http://localhost:3000/api/geotags/
+content-type: application/json
+
+{
+  "latitude": 49.01513,
+  "longitude": 8.38973,
+  "name": "Home",
+  "hashtag": "#home"
+}
+
+###
+
+PUT http://localhost:3000/api/geotags/2
+content-type: application/json
+
+{
+  "name": "Atay",
+  "hashtag": "#dungeon"
+}
+
+###Delete
+
+DELETE http://localhost:3000/api/geotags/2

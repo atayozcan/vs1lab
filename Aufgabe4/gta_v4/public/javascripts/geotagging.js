@@ -117,3 +117,45 @@ function updateLocation() {
 document.addEventListener("DOMContentLoaded", () => {
     updateLocation();
 });
+document.getElementById("Add_button").addEventListener("submit", (event) => {
+    event.preventDefault();
+});
+
+document.getElementById("search_button").addEventListener("submit", (event) => {
+    event.preventDefault();
+});
+//Deniz ended
+
+
+// Async Funktionen mit Await
+async function setTagging() {
+    let response = await fetch("http://localhost:3000/" + id);
+    return await response.json();
+}
+
+//Deniz starting from here
+fetch("http://localhost:3000/", {
+
+    method: "POST",
+    headers: {"Content-Type": "application/json"}, //This means when you're sending JSON to the server or receiving JSON from the server, you should always declare the Content-Type of the header as application/json as this is the standard that the client and server understand.
+    async: true,
+    body: JSON.stringify(data) //I'm not sure about this
+})
+    .then(response => response.json())
+    .then(data => console.log("Erfolg:", data))
+    .catch(error=>console.error("Fehler:", error));
+
+async function setDiscovery() {
+    let response = await fetch("http://localhost:3000/" + id);
+    return await response.json();
+}
+
+fetch("http://localhost:3000/", {
+    method: "GET", //The input to fetch is a request. A request has an associated method (a method). Unless stated otherwise it is `GET`. So should we specify this??
+    headers: {"Content-Type": "application/json"},
+    async: true
+    //no body here with the get function
+
+})
+    .then(response => response.json())
+    .catch(error=>console.error("Fehler:", error));

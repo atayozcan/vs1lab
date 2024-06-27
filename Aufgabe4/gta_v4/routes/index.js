@@ -168,4 +168,4 @@ router.delete("/api/geotags/:id", (req, res) => {
     res.json(foundtag);
 })
 
-module.exports = {router, store};
+module.exports = router;

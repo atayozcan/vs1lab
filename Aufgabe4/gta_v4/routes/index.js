@@ -146,7 +146,7 @@ router.get("/api/geotags/:id", (req, res) => {
  */
 router.put("/api/geotags/:id", (req, res) => {
     const data = req.body
-    let foundtag = store.getAllGeoTags().find((tag) => tag.id ==  req.params.id);
+    let foundtag = store.getAllGeoTags().find((tag) => tag.id == req.params.id);
     foundtag.name = data.name;
     foundtag.hashtag = data.hashtag;
     res.json(foundtag);
@@ -168,4 +168,4 @@ router.delete("/api/geotags/:id", (req, res) => {
     res.json(foundtag);
 })
 
-module.exports = router;
+module.exports = {router, store};

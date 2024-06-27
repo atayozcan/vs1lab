@@ -63,12 +63,17 @@
         </form>
         <div class="discovery__wrapper">
             <div class="discovery__taglist col-4">
-                <ul class="discovery__results" id="discoveryResults">
+                <ul class="discovery__results" id="discoveryResults" name="discoveryResults">
                     <% if (taglist !== undefined) taglist.forEach(function(gtag) { %>
                         <li><%= gtag.name %> (<%= gtag.latitude %>, <%= gtag.longitude %>
                             ) <%= gtag.hashtag %> </li>
                     <% }); %>
                 </ul>
+                <div class="page_buttons_wrapper">
+                    <button id="prev_page" class="small_button" disabled><<<</button>
+                    <b><p id="page_text">1/2 (12)</p></b>
+                    <button id="next_page" class="small_button">>>></button>
+                </div>
             </div>
             <div class="discovery__map col-8" id="map" data-markers="<%= JSON.stringify(taglist) %>">
                 <img src="./images/mapview.jpg" alt="a map with locations" id="mapView"/>

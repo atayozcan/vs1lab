@@ -86,7 +86,7 @@ class MapManager {
     }
 }
 
-const tagsPerPage = 5; //die Anzahl der Einträge pro Seite
+const tagsPerPage = 5;
 let tagCount = 0;
 let page = 0;
 

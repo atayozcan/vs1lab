@@ -1,5 +1,3 @@
-console.log("The geoTagging script is going to start...");
-
 /**
  * A class to help using the HTML5 Geolocation API.
  */
@@ -88,27 +86,20 @@ class MapManager {
     }
 }
 
-//Zusatzaufgabe: Pagination
 const tagsPerPage = 5; //die Anzahl der Einträge pro Seite
 let tagCount = 0;
 let page = 0;
 
 function updatePage() {
-    //updates and shows on which page we are at
     const pageText = document.getElementById("page_text");
     pageText.innerHTML = `S: ${page + 1}/${Math.ceil(tagCount / tagsPerPage)} (${tagCount})`
-    //prev_page and next_page are buttons, added to the index.ejs
     const prevPage = document.getElementById("prev_page");
     const nextPage = document.getElementById("next_page");
-    //if page is 0, disable the previous page button, otherwise let it work
     prevPage.disabled = page === 0;
-    //if we are on the last page disable the previous page button, otherwise let it work
     nextPage.disabled = page === Math.ceil(tagCount / tagsPerPage) - 1;
-    console.log("update");
 }
 
 async function previousPage() {
-    console.log("prevPage");
     if (page <= 0) return;
     page--;
     const search = document.getElementById("searchterm").value;
@@ -120,7 +111,6 @@ async function previousPage() {
 }
 
 async function nextPage() {
-    console.log("nextPage");
     if (page >= Math.ceil(tagCount / tagsPerPage) - 1) return;
     page++;
     const search = document.getElementById("searchterm").value;
@@ -156,14 +146,12 @@ function updateLocation() {
 }
 
 async function addTag(event) {
-    //Absenden der Formulare verhindern
     event.preventDefault();
-    //Tipp 1: Sie können hier den serverseitigen GeoTag Konstruktor aus Aufgabe 3 im Client Skript wiederverwenden.
     const search = document.getElementById("searchterm").value;
-    const latitude = document.getElementById("tag_latitude").value;
-    const longitude = document.getElementById("tag_longitude").value;
-    const name = document.getElementById("tag_name").value;
-    const hashtag = document.getElementById("tag_hashtag").value;
+    const latitude = document.getElementById("latitude_tagging").value;
+    const longitude = document.getElementById("longitude_tagging").value;
+    const name = document.getElementById("name_tagging").value;
+    const hashtag = document.getElementById("hashtag_tagging").value;
     let tag = await addTagRequest(latitude, longitude, name, hashtag);
     if (!tag) return;
     let tags = await getFilteredListRequest(latitude, longitude, 0, tagsPerPage, search);
@@ -183,37 +171,24 @@ async function searchTag(event) {
 }
 
 async function addTagRequest(latitude, longitude, name, hashtag) {
-    try {
-        let response = await fetch("http://localhost:3000/api/geotags", {
-            method: "POST", //per HTTP POST
-            headers: {
-                "Content-Type": "application/json" //Tipp 2: spezifizieren sie einen geeigneten MIME-Type für JSON im HTTP-Header Content-Type, damit der Server den Inhalt erkennt.
-            }, body: JSON.stringify({latitude: latitude, longitude: longitude, name: name, hashtag: hashtag})
-        });
-        let tag = await response.json();
-        console.log('Erfolg:', tag);
-        return tag;
-    } catch (error) {
-        console.error('Fehler:', error);
-        return null;
-    }
+    let response = await fetch("http://localhost:3000/api/geotags", {
+        method: "POST", //per HTTP POST
+        headers: {
+            "Content-Type": "application/json"
+        }, body: JSON.stringify({latitude: latitude, longitude: longitude, name: name, hashtag: hashtag})
+    });
+    return await response.json();
 }
 
 async function getFilteredListRequest(lat, lon, fromIndex, count, searchterm = "") {
-    try {
-        let response = await fetch(`http://localhost:3000/api/geotags/pages/?` + new URLSearchParams({
-            search: searchterm, lat: lat, lon: lon, fromIndex: fromIndex, count: count
-        }), {
-            methode: "GET", headers: {"Content-Type": "application/json"},
-        });
-        let {total, list} = await response.json();
-        tagCount = total;
-        console.log('Erfolg:', list);
-        return list;
-    } catch (error) {
-        console.error('Fehler:', error);
-        return [];
-    }
+    let response = await fetch(`http://localhost:3000/api/geotags/pages/?` + new URLSearchParams({
+        search: searchterm, lat: lat, lon: lon, fromIndex: fromIndex, count: count
+    }), {
+        methode: "GET", headers: {"Content-Type": "application/json"},
+    });
+    let {total, list} = await response.json();
+    tagCount = total;
+    return list;
 }
 
 function updateList(tags) {
@@ -224,8 +199,6 @@ function updateList(tags) {
         tagNode.appendChild(document.createTextNode(`${tag.name} ( ${tag.latitude} ,${tag.longitude}) ${tag.hashtag}`));
         list.appendChild(tagNode);
     }
-    console.log("Update List:")
-    console.log(tags)
     updatePage();
 }
 

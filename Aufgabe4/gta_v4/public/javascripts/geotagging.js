@@ -109,52 +109,50 @@ function updatePage() {
 
 async function previousPage() {
     console.log("prevPage");
-    if (page > 0) {//if we are on the first page, deactivate previous page button
-        page--;
-        const search = document.getElementById("searchterm").value;
-        const latitude = parseFloat(document.getElementById("discovery__latitude").value);
-        const longitude = parseFloat(document.getElementById("discovery__longitude").value);
-        let tags = await getFilteredListRequest(latitude, longitude, page * tagsPerPage, tagsPerPage, search);
-        updateList(tags);
-        updateMap(tags);
-    }
+    if (page <= 0) return;
+    page--;
+    const search = document.getElementById("searchterm").value;
+    const latitude = parseFloat(document.getElementById("discovery__latitude").value);
+    const longitude = parseFloat(document.getElementById("discovery__longitude").value);
+    let tags = await getFilteredListRequest(latitude, longitude, page * tagsPerPage, tagsPerPage, search);
+    updateList(tags);
+    updateMap(tags);
 }
 
 async function nextPage() {
     console.log("nextPage");
-    if (page < Math.ceil(tagCount / tagsPerPage) - 1)//that means there is one more page
-    {
-        page++;
-        const search = document.getElementById("searchterm").value;
-        const latitude = parseFloat(document.getElementById("discovery__latitude").value);
-        const longitude = parseFloat(document.getElementById("discovery__longitude").value);
-        let tags = await getFilteredListRequest(latitude, longitude, page * tagsPerPage, tagsPerPage, search);
-        updateList(tags);
-        updateMap(tags);
-    }
+    if (page >= Math.ceil(tagCount / tagsPerPage) - 1) return;
+    page++;
+    const search = document.getElementById("searchterm").value;
+    const latitude = parseFloat(document.getElementById("discovery__latitude").value);
+    const longitude = parseFloat(document.getElementById("discovery__longitude").value);
+    let tags = await getFilteredListRequest(latitude, longitude, page * tagsPerPage, tagsPerPage, search);
+    updateList(tags);
+    updateMap(tags);
 }
 
 /**
  * A function to retrieve the current location and update the page.
  * It is called once the page has been fully loaded.
  */
-
 function updateLocation() {
-    let latitude = location.latitude;
-    let longitude = location.longitude;
-    document.getElementById("tag_latitude").setAttribute("placeholder", latitude);
-    document.getElementById("tag_longitude").setAttribute("placeholder", longitude);
-    document.getElementById("tag_latitude").value = latitude;
-    document.getElementById("tag_longitude").value = longitude;
-    document.getElementById("discovery__latitude").value = latitude;
-    document.getElementById("discovery__longitude").value = longitude;
-    let tagsString = document.getElementById("map").dataset.markers;
-    let tags = JSON.parse(tagsString);
-    let map = new MapManager();
-    map.initMap(latitude, longitude);
-    map.updateMarkers(latitude, longitude, tags);
-    document.getElementById("mapView").remove();
-    document.getElementById("map").getElementsByTagName("span")[0].remove();
+    LocationHelper.findLocation(function (location) {
+        const latitude = location.latitude;
+        const longitude = location.longitude;
+        document.getElementById("latitude_tagging").setAttribute("placeholder", latitude);
+        document.getElementById("longitude_tagging").setAttribute("placeholder", longitude);
+        document.getElementById("latitude_tagging").value = latitude;
+        document.getElementById("longitude_tagging").value = longitude;
+        document.getElementById("discovery__latitude").value = latitude;
+        document.getElementById("discovery__longitude").value = longitude;
+        let tagsString = document.getElementById("map").dataset.markers;
+        let tags = JSON.parse(tagsString);
+        const map = new MapManager();
+        map.initMap(latitude, longitude);
+        map.updateMarkers(latitude, longitude, tags);
+        document.getElementById("mapView").remove();
+        document.getElementById("map").getElementsByTagName("span")[0].remove();
+    });
 }
 
 async function addTag(event) {
@@ -236,7 +234,7 @@ function updateMap(tags) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     updateLocation();
-    document.getElementById("tag-form").addEventListener("submit", addTag);
+    document.getElementById("tag_form").addEventListener("submit", addTag);
     document.getElementById("discoveryFilterForm").addEventListener("submit", searchTag);
     document.getElementById("searchterm").value = "";
     document.getElementById("prev_page").addEventListener("click", previousPage);

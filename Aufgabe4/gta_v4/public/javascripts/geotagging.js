@@ -86,7 +86,6 @@ class MapManager {
     }
 }
 
-const url = require('url')
 const tagsPerPage = 5;
 let tagCount = 0;
 let page = 0;
@@ -149,8 +148,8 @@ function updateLocation() {
 async function addTag(event) {
     event.preventDefault();
     const search = document.getElementById("searchterm").value;
-    const latitude = document.getElementById("discovery__latitude").value;
-    const longitude = document.getElementById("discovery__longitude").value;
+    const latitude = document.getElementById("latitude_tagging").value;
+    const longitude = document.getElementById("longitude_tagging").value;
     const name = document.getElementById("name_tagging").value;
     const hashtag = document.getElementById("hashtag_tagging").value;
     let tag = await addTagRequest(latitude, longitude, name, hashtag);
@@ -181,30 +180,15 @@ async function addTagRequest(latitude, longitude, name, hashtag) {
     return await response.json();
 }
 
-import { URLSearchParams } from "url"
-
 async function getFilteredListRequest(lat, lon, fromIndex, count, searchterm = "") {
-    try {
-        let response = await fetch(`http://localhost:3000/api/geotags/pages/?` + new URLSearchParams({
-            search: searchterm,
-            lat: lat,
-            lon: lon,
-            fromIndex: fromIndex,
-            count: count
-        }), {
-            methode: "GET",
-            headers: { "Content-Type": "application/json" },
-        });
-
-        let {total, list} = await response.json();
-        tagCount = total;
-        console.log('Erfolg:', list);
-
-        return list;
-    } catch (error) {
-        console.error('Fehler:', error);
-        return [];
-    }
+    let response = await fetch(`http://localhost:3000/api/geotags/pages/?` + new URLSearchParams({
+        search: searchterm, lat: lat, lon: lon, fromIndex: fromIndex, count: count
+    }), {
+        methode: "GET", headers: {"Content-Type": "application/json"},
+    });
+    let {total, list} = await response.json();
+    tagCount = total;
+    return list;
 }
 
 function updateList(tags) {
@@ -219,14 +203,6 @@ function updateList(tags) {
 }
 
 function updateMap(tags) {
-    let newMap = new MapManager("qLcGFWbvMErinkcPHNT3lOnenpAXPru0");
-    let latitude = document.getElementById("tag_latitude").value;
-    let longitude = document.getElementById("tag_longitude").value;
-
-    newMap.initMap(latitude, longitude);
-    newMap.updateMarkers(latitude, longitude, tags);
-    document.getElementById("mapView").remove();
-    document.getElementById("map").getElementsByTagName("span")[0].remove();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
